@@ -1,0 +1,13 @@
+# generated at runtime on each Mac
+runtime/
+dns/out/
+edge/out/
+
+# TLS: private keys and intermediates NEVER go to git (public .crt files are fine)
+tls/out/*.key
+tls/out/*.csr
+tls/out/*.srl
+tls/out/*.ext
+
+.DS_Store
+__pycache__/
