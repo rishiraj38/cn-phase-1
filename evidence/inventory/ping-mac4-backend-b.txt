@@ -1,0 +1,21 @@
+# Ping matrix from mac4-backend-b - Thu Oct  1 08:38:51 Asia 2026
+
+## Mac1 (192.168.50.11)
+3 packets transmitted, 3 received, 0% packet loss, time 2045ms
+rtt min/avg/max/mdev = 0.031/0.045/0.064/0.013 ms
+RESULT: Mac1 reachable
+
+## Mac2 (192.168.50.12)
+3 packets transmitted, 3 received, 0% packet loss, time 2042ms
+rtt min/avg/max/mdev = 0.020/0.033/0.044/0.010 ms
+RESULT: Mac2 reachable
+
+## Mac3 (192.168.50.13)
+3 packets transmitted, 3 received, 0% packet loss, time 2043ms
+rtt min/avg/max/mdev = 0.024/0.036/0.043/0.008 ms
+RESULT: Mac3 reachable
+
+## Mac4 (192.168.50.14)
+3 packets transmitted, 3 received, 0% packet loss, time 2042ms
+rtt min/avg/max/mdev = 0.013/0.030/0.042/0.012 ms
+RESULT: Mac4 reachable

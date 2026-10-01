@@ -1,0 +1,12 @@
+# F5-wrong-port - on mac4-backend-b - Thu Oct  1 08:42:12 Asia 2026
+==> F5  Wrong destination port on the client
+--- ping 192.168.50.12 (host is up)
+    rtt min/avg/max/mdev = 0.024/0.036/0.049/0.012 ms
+--- TCP to the RIGHT port 443
+    Connection to 192.168.50.12 443 port [tcp/https] succeeded!
+--- TCP to the WRONG port 444
+    nc: connect to 192.168.50.12 port 444 (tcp) failed: Connection refused
+--- curl https://app.team.test:444/
+    curl: (7) Failed to connect to app.team.test port 444 after 0 ms: Couldn't connect to server
+WHY: same IP, same host - but nothing listens on :444, so the OS answers the SYN with a
+     RST ('connection refused'). IP picks the machine, the port picks the program.

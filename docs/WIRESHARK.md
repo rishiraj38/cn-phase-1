@@ -15,19 +15,22 @@ It flushes the DNS cache (so a real DNS query happens), starts `tcpdump` with th
 
 On Mac 2 (optional but impressive): `scripts/capture-edge.sh 20` while a client runs `scripts/verify.sh lb`. You'll see the same requests **encrypted** on :443 and **in plain text** on :3001/:3002. That's TLS termination, proven.
 
-## What to screenshot (save into `evidence/screenshots/`)
+## Screenshots (all in `evidence/screenshots/`, taken in Wireshark from our captures)
 
 | # | Wireshark display filter | Point at | Screenshot name |
 |---|---|---|---|
-| 1 | `dns` | Query `A app.teamx.test` from client:ephemeral → Mac1:**53/UDP**. Response with **Mac 2's IP**, TTL 60, flag `aa` (authoritative) | `01-dns.png` |
-| 2 | `tcp.flags.syn==1 or (tcp.seq==1 and tcp.ack==1 and tcp.len==0)` | **SYN → SYN-ACK → ACK**, client ephemeral port → **443** | `02-tcp-handshake.png` |
-| 3 | `tcp.stream eq 0` then the SYN packet → expand TCP | Sequence number, ack number, window, MSS option | `03-tcp-seq-ack.png` |
-| 4 | `tls.handshake.type == 1` → expand TLS | **ClientHello**: SNI `app.teamx.test`, cipher suites, ALPN `h2` | `04-client-hello.png` |
-| 5 | `tls.handshake` | **ServerHello, Certificate** (expand it: subject `app.teamx.test`, issuer `Team X Local Root CA`), key exchange | `05-server-hello-cert.png` |
-| 6 | `tls.record.content_type == 20` | **ChangeCipherSpec** from both sides | `06-change-cipher-spec.png` |
-| 7 | `tls.app_data` | **Application Data**: the HTTP is unreadable in the bytes pane | `07-encrypted-http.png` |
+| 1 | `dns` | Query `A app.team.test` from client:ephemeral → Mac1:**53/UDP**. Response with **Mac 2's IP**, TTL 60, flag `aa` (authoritative) | `01-dns-query-response.png` |
+| 2 | `tcp.flags.syn==1 or (tcp.seq==1 and tcp.ack==1 and tcp.len==0)` | **SYN → SYN-ACK → ACK**, client ephemeral port → **443** | `02-tcp-three-way-handshake.png` |
+| 3 | `tcp.stream eq 0` then the SYN packet → expand TCP | Sequence number, ack number, window, MSS option | `03-tcp-seq-ack-numbers.png` |
+| 4 | `tls.handshake.type == 1` → expand TLS | **ClientHello**: SNI `app.team.test`, cipher suites, ALPN `h2` | `04-tls-client-hello.png` |
+| 5 | `tls.handshake` | **ServerHello, Certificate** (expand it: subject `app.team.test`, issuer `team Local Root CA`), key exchange | `05-tls-server-hello-certificate.png` |
+| 6 | `tls.record.content_type == 20` | **ChangeCipherSpec** from both sides | `06-tls-change-cipher-spec.png` |
+| 7 | `tls.app_data` | **Application Data**: the HTTP is unreadable in the bytes pane | `07-encrypted-application-data.png` |
 | 8 | Statistics → Flow Graph | The whole DNS → TCP → TLS → data → FIN timeline on one screen | `08-flow-graph.png` |
-| 9 | (Mac 2 capture) `http` | Backend leg: `GET /api/status`, `X-Forwarded-For`, `X-Backend: A` in clear text | `09-backend-leg-plain-http.png` |
+| 9 | (Mac 2 capture) `http` | Backend leg: `GET /api/status`, `X-Forwarded-For`, `X-Backend: A` in clear text | `09-edge-to-backend-plain-http.png` |
+
+| 10 | TLS 1.3 capture, `tls` | ServerHello then only "Application Data": in TLS 1.3 the Certificate itself is encrypted | `10-tls13-certificate-encrypted.png` |
+| 11 | TLS 1.3 capture + key log, `http2` | The decrypted HTTP/2 request/response inside TLS (only possible because we hold the session keys) | `11-tls13-decrypted-with-keylog.png` |
 
 Tip: View → Time Display Format → Seconds Since Previous Displayed Packet makes it easy to show that DNS happens *before* the SYN.
 

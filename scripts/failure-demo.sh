@@ -21,11 +21,10 @@ probe() {   # the same 3 checks every time: DNS, IP reachability, the service
   curl -sS "${CURL_TLS[@]}" --max-time 6 -o /dev/null -w '    HTTP %{http_code}  X-remote=%{remote_ip}:%{remote_port}\n' "$APP_URL/api/status" 2>&1 | sed 's/^/    /'
 }
 tcpcheck() { if is_mac; then nc -vz -G 3 "$1" "$2"; else nc -vz -w 3 "$1" "$2"; fi 2>&1 | sed 's/^/    /'; }
-record() { local f="$EVID/failures/$1-$(host_tag)-$(stamp).txt"; shift; { echo "# $* - $(date)"; "$@"; } 2>&1 | tee "$f"; ok "saved $f"; }
+record() { local f="$EVID/failures/$1-$(host_tag)-$(stamp).txt"; { echo "# $1 - on $(host_tag) - $(date)"; "$2"; } 2>&1 | tee "$f"; ok "saved $f"; }
 
 f1() {  # wrong DNS server on the client
   say "F1  Wrong DNS server configured on this client"
-  is_mac || { warn "needs macOS networksetup"; return; }
   echo "Before:"; probe
   bash "$ROOT/scripts/client-dns.sh" set "$WRONG_IP" >/dev/null
   echo; echo "After pointing DNS at $WRONG_IP (a machine with no DNS server):"; probe
@@ -65,7 +64,7 @@ f4() {  # both backends stopped
   pause "On Mac 4 stop Backend B too   (Backend A should still be stopped)"
   probe
   echo "--- verbose: TLS works, the error comes from nginx itself"
-  curl -sv "${CURL_TLS[@]}" "$APP_URL/api/status" 2>&1 | grep -E "SSL connection|server certificate|subject:|^< HTTP|^< Server|502" | sed 's/^/    /'
+  curl -sv "${CURL_TLS[@]}" "$APP_URL/api/status" 2>&1 | grep -E "SSL connection|verify ok|subject:|^< HTTP|<h1>" | sed 's/^/    /'
   echo "WHY: DNS ok, TCP ok, TLS ok (handled by the edge) - only the upstream is gone, so nginx"
   echo "     answers 502 Bad Gateway. That is exactly where the edge ends and the backend begins."
   pause "Start both backends again (Mac 3: scripts/backend.sh run A, Mac 4: scripts/backend.sh run B)"

@@ -18,7 +18,7 @@ source "$(dirname "$0")/common.sh"
 
 IFACE="${IFACE:-$(default_iface)}"
 T="$(stamp)"; H="$(host_tag)"
-PCAP="$EVID/pcap/full-flow-$H-$T.pcap"
+PCAP="$EVID/pcap/full-flow-tls${TLS:-1.2}-$H-$T.pcap"
 KEYS="$EVID/pcap/sslkeys-$H-$T.log"
 TXT="$EVID/text/capture-$H-$T.txt"
 FILTER="(udp port 53 and host ${MAC1_IP}) or (tcp port ${HTTPS_PORT} and host ${MAC2_IP})"

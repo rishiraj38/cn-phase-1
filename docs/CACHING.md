@@ -10,19 +10,19 @@ ETag: "8e637a1a8a261c8e"          ← a hash of the response body
 `scripts/verify.sh cache` shows the whole sequence:
 
 ```
-$ curl -I https://app.teamx.test/api/info
+$ curl -I https://app.team.test/api/info
 HTTP/2 200
 cache-control: public, max-age=60
 etag: "8e637a1a8a261c8e"
 x-backend: A
 
-$ curl -I -H 'If-None-Match: "8e637a1a8a261c8e"' https://app.teamx.test/api/info
+$ curl -I -H 'If-None-Match: "8e637a1a8a261c8e"' https://app.team.test/api/info
 HTTP/2 304                        ← no body sent, "you already have it"
 etag: "8e637a1a8a261c8e"
 x-backend: B                      ← works from either backend (same content, same hash)
 ```
 
-In the browser: open DevTools → Network, load `https://app.teamx.test/api/info`, then reload. You'll see `(disk cache)` / `(memory cache)` within 60 s. A hard refresh (⌘⇧R) sends `If-None-Match` and you'll see **304**.
+In the browser: open DevTools → Network, load `https://app.team.test/api/info`, then reload. You'll see `(disk cache)` / `(memory cache)` within 60 s. A hard refresh (⌘⇧R) sends `If-None-Match` and you'll see **304**.
 
 ## The three cases
 

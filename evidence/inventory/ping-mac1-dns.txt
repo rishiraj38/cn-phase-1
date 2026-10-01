@@ -1,0 +1,21 @@
+# Ping matrix from mac1-dns - Thu Oct  1 09:10:03 Asia 2026
+
+## Mac1 (192.168.50.11)
+3 packets transmitted, 3 received, 0% packet loss, time 2036ms
+rtt min/avg/max/mdev = 0.036/0.041/0.045/0.004 ms
+RESULT: Mac1 reachable
+
+## Mac2 (192.168.50.12)
+3 packets transmitted, 3 received, 0% packet loss, time 2041ms
+rtt min/avg/max/mdev = 0.032/0.045/0.061/0.012 ms
+RESULT: Mac2 reachable
+
+## Mac3 (192.168.50.13)
+3 packets transmitted, 3 received, 0% packet loss, time 2042ms
+rtt min/avg/max/mdev = 0.023/0.036/0.046/0.009 ms
+RESULT: Mac3 reachable
+
+## Mac4 (192.168.50.14)
+3 packets transmitted, 3 received, 0% packet loss, time 2041ms
+rtt min/avg/max/mdev = 0.021/0.057/0.082/0.026 ms
+RESULT: Mac4 reachable

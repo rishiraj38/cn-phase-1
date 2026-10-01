@@ -2,14 +2,14 @@
 
 ## What we built
 
-A tiny **private certificate authority (CA)** of our own, plus one **server certificate** for `app.teamx.test` and `api.teamx.test` that the CA signed. nginx on Mac 2 presents that certificate. Every client Mac adds our CA to its trust store once. After that, the browser and curl accept the server **with full validation, and no `-k` anywhere**.
+A tiny **private certificate authority (CA)** of our own, plus one **server certificate** for `app.team.test` and `api.team.test` that the CA signed. nginx on Mac 2 presents that certificate. Every client Mac adds our CA to its trust store once. After that, the browser and curl accept the server **with full validation, and no `-k` anywhere**.
 
 ```
- Team X Local Root CA   (ca.crt / ca.key)      ← trusted by every client Mac
+ team Local Root CA   (ca.crt / ca.key)      ← trusted by every client Mac
           │ signs
           ▼
- app.teamx.test         (server.crt / server.key)  ← nginx sends this in the handshake
-   SAN: DNS:app.teamx.test, DNS:api.teamx.test
+ app.team.test         (server.crt / server.key)  ← nginx sends this in the handshake
+   SAN: DNS:app.team.test, DNS:api.team.test
 ```
 
 ## Commands (all wrapped in `tls/make-certs.sh`)
@@ -21,7 +21,7 @@ openssl req -x509 -new -key ca.key -sha256 -days 825 -out ca.crt -config ca.ext
 
 # 2. Server key + certificate signing request
 openssl genrsa -out server.key 2048
-openssl req -new -key server.key -subj "/CN=app.teamx.test" -out server.csr
+openssl req -new -key server.key -subj "/CN=app.team.test" -out server.csr
 
 # 3. CA signs the CSR, adding SAN + serverAuth
 openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
@@ -49,7 +49,7 @@ ssl_protocols       TLSv1.2 TLSv1.3;
 
 ```bash
 scripts/trust-ca.sh
-# = curl http://app.teamx.test/ca.crt -o tls/out/ca.crt
+# = curl http://app.team.test/ca.crt -o tls/out/ca.crt
 #   compare SHA-256 fingerprint with the one Mac 2 printed   ← stops a fake CA
 #   sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain tls/out/ca.crt
 ```
@@ -63,11 +63,11 @@ If a curl build doesn't read the keychain, our scripts pass `--cacert tls/out/ca
 
 1. The server's certificate chain leads up to a CA that is in **my** trust store (our root CA).
 2. Each signature in the chain is valid, so nobody altered the certificate.
-3. The name I typed (`app.teamx.test`) appears in the certificate's SAN list.
+3. The name I typed (`app.team.test`) appears in the certificate's SAN list.
 4. Today's date is inside the validity period.
 5. The server proves it owns the matching **private key** by signing the handshake (CertificateVerify in TLS 1.3, ServerKeyExchange in TLS 1.2). Copying `server.crt` alone is useless without `server.key`.
 
-If you type the IP (`https://192.168.1.12`), check 3 fails because the IP isn't in the SAN. That's one more reason the demo always uses the name.
+If you type the IP (`https://192.168.50.12`), check 3 fails because the IP isn't in the SAN. That's one more reason the demo always uses the name.
 
 ## The handshake (what we point at in Wireshark)
 
@@ -75,7 +75,7 @@ TLS 1.2 (what `scripts/capture.sh` uses by default, because every step is visibl
 
 | # | Direction | Message | Meaning |
 |---|---|---|---|
-| 1 | C → S | **ClientHello** | TLS versions, cipher suites, random, **SNI = app.teamx.test**, ALPN = h2,http/1.1 |
+| 1 | C → S | **ClientHello** | TLS versions, cipher suites, random, **SNI = app.team.test**, ALPN = h2,http/1.1 |
 | 2 | S → C | **ServerHello** | Picked version + cipher + ALPN, server random |
 | 3 | S → C | **Certificate** | server.crt + ca.crt. The client validates it now. |
 | 4 | S → C | ServerKeyExchange | ECDHE public key, **signed** with server.key |

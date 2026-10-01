@@ -1,0 +1,25 @@
+# F2-wrong-dns-record - on mac4-backend-b - Thu Oct  1 08:42:13 Asia 2026
+==> F2  DNS record points to a wrong IP
+
+>>> On Mac 1 run:   scripts/dns.sh wrong-record      (app.team.test -> 192.168.50.13)
+--- DNS:     dig +short app.team.test
+    192.168.50.13
+--- IP:      ping -c 2 192.168.50.12  (the edge, by address)
+    rtt min/avg/max/mdev = 0.026/0.032/0.039/0.006 ms
+--- SERVICE: curl https://app.team.test/api/status
+    curl: (7) Failed to connect to app.team.test port 443 after 1 ms: Couldn't connect to server
+        HTTP 000  X-remote=:0
+--- verbose: where does curl actually go?
+    *   Trying 192.168.50.13:443...
+    * connect to 192.168.50.13 port 443 from 192.168.50.14 port 38600 failed: Connection refused
+    * Failed to connect to app.team.test port 443 after 0 ms: Couldn't connect to server
+WHY: resolution SUCCEEDS, but returns 192.168.50.13, which has nothing on :443.
+     DNS is just a directory - it hands out an address, it does not make a connection.
+
+>>> On Mac 1 run:   scripts/dns.sh fix
+--- DNS:     dig +short app.team.test
+    192.168.50.12
+--- IP:      ping -c 2 192.168.50.12  (the edge, by address)
+    rtt min/avg/max/mdev = 0.022/0.033/0.044/0.011 ms
+--- SERVICE: curl https://app.team.test/api/status
+        HTTP 200  X-remote=192.168.50.12:443

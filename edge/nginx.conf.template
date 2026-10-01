@@ -68,6 +68,11 @@ http {
 
         add_header X-Edge "mac2-nginx" always;
 
+        # Browsers fetch /favicon.ico with every page. Answer it here so it
+        # doesn't use up a round-robin turn (otherwise page loads would always
+        # land on the same backend and the browser would never alternate A/B).
+        location = /favicon.ico { access_log off; return 204; }
+
         location / {
             proxy_pass http://app_backends;      # TLS ends here; backend leg is plain HTTP
             proxy_http_version 1.1;

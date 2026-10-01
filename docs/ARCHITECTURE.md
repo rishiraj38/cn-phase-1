@@ -2,16 +2,20 @@
 
 ## 1. Network topology
 
-All four Macs join the same private Wi-Fi/LAN, so they share one subnet and one default gateway (the router). There's no routing between subnets, no NAT between our machines, and no cloud.
+![topology](topology.png)
+
+**Infrastructure: Type 3 (virtual machines).** The four machines are virtual hosts created by `lab/virtual-lan.sh`. Each is an isolated Linux network namespace with its own network interface (`eth0`), IP address, MAC address, routing table, listening ports and `/etc/resolv.conf`, so the network sees four separate machines. All four plug into one virtual switch (the Linux bridge `cnlan`), which also holds the gateway address 192.168.50.1 and plays the role of the Wi-Fi router. Run any command "on" a machine with `lab/on.sh mac2 <command>`. The very same scripts and configs run unchanged on four physical Macs (Type 1).
+
+All four machines join the same private LAN, so they share one subnet and one default gateway (the router). There's no routing between subnets, no NAT between our machines, and no cloud.
 
 ```mermaid
 flowchart LR
-  subgraph LAN["Private LAN 192.168.1.0/24 (one broadcast domain)"]
+  subgraph LAN["Private LAN 192.168.50.0/24 (one broadcast domain)"]
     M1["Mac 1<br/>DNS server (dnsmasq :53)<br/>+ test client"]
     M2["Mac 2<br/>Edge: nginx :80/:443<br/>TLS + load balancer"]
     M3["Mac 3<br/>Backend A :3001"]
     M4["Mac 4<br/>Backend B :3002<br/>+ test client"]
-    R(("Wi-Fi router<br/>default gateway"))
+    R(("virtual switch cnlan<br/>gateway 192.168.50.1"))
   end
   M1 --- R
   M2 --- R
@@ -32,10 +36,12 @@ Fill in from `evidence/inventory/*.txt` (the `scripts/inventory.sh` output print
 
 | Role | Hostname | Interface | IPv4 | Mask / prefix | Gateway | MAC address |
 |---|---|---|---|---|---|---|
-| Mac 1: DNS + client | | en0 | 192.168.1.11 | 255.255.255.0 (/24) | 192.168.1.1 | |
-| Mac 2: Edge | | en0 | 192.168.1.12 | 255.255.255.0 (/24) | 192.168.1.1 | |
-| Mac 3: Backend A | | en0 | 192.168.1.13 | 255.255.255.0 (/24) | 192.168.1.1 | |
-| Mac 4: Backend B + client | | en0 | 192.168.1.14 | 255.255.255.0 (/24) | 192.168.1.1 | |
+| Mac 1: DNS + client | mac1-dns | eth0 | 192.168.50.11 | 255.255.255.0 (/24) | 192.168.50.1 | 02:42:c0:a8:32:11 |
+| Mac 2: Edge | mac2-edge | eth0 | 192.168.50.12 | 255.255.255.0 (/24) | 192.168.50.1 | 02:42:c0:a8:32:12 |
+| Mac 3: Backend A | mac3-backend-a | eth0 | 192.168.50.13 | 255.255.255.0 (/24) | 192.168.50.1 | 02:42:c0:a8:32:13 |
+| Mac 4: Backend B + client | mac4-backend-b | eth0 | 192.168.50.14 | 255.255.255.0 (/24) | 192.168.50.1 | 02:42:c0:a8:32:14 |
+
+Raw output for each machine: `evidence/inventory/<hostname>.txt`. Ping matrix: `evidence/inventory/ping-*.txt`.
 
 ### Service map
 
@@ -51,17 +57,17 @@ Fill in from `evidence/inventory/*.txt` (the `scripts/inventory.sh` output print
 
 | Name | Type | Value | TTL |
 |---|---|---|---|
-| `app.teamx.test` | A | Mac 2 IP | 60 s |
-| `api.teamx.test` | A | Mac 2 IP | 60 s |
-| `mac1…mac4.teamx.test` | A | each Mac's IP | 60 s |
-| anything else under `teamx.test` | | NXDOMAIN (we are authoritative, `local=/teamx.test/`) | |
+| `app.team.test` | A | Mac 2 IP | 60 s |
+| `api.team.test` | A | Mac 2 IP | 60 s |
+| `mac1…mac4.team.test` | A | each Mac's IP | 60 s |
+| anything else under `team.test` | | NXDOMAIN (we are authoritative, `local=/team.test/`) | |
 | everything else (google.com …) | | forwarded to `1.1.1.1` | |
 
-Both service names point at the **edge**, never at a backend. That's why clients never need to know backend IPs: the backends can move, scale or die, and the client still just asks for `app.teamx.test`.
+Both service names point at the **edge**, never at a backend. That's why clients never need to know backend IPs: the backends can move, scale or die, and the client still just asks for `app.team.test`.
 
 ## 3. Request flow, layer by layer
 
-What happens when the client on Mac 4 runs `curl https://app.teamx.test/api/status`:
+What happens when the client on Mac 4 runs `curl https://app.team.test/api/status`:
 
 ```mermaid
 sequenceDiagram
@@ -70,16 +76,16 @@ sequenceDiagram
   participant D as DNS (Mac 1)
   participant E as Edge nginx (Mac 2)
   participant A as Backend A (Mac 3)
-  C->>D: DNS query A? app.teamx.test   (UDP 50xxx → 53)
+  C->>D: DNS query A? app.team.test   (UDP 50xxx → 53)
   D-->>C: A = Mac 2 IP, TTL 60
   C->>E: TCP SYN          (ephemeral port → 443)
   E-->>C: TCP SYN-ACK
   C->>E: TCP ACK          (connection established)
-  C->>E: TLS ClientHello  (SNI=app.teamx.test, ALPN h2/http1.1)
+  C->>E: TLS ClientHello  (SNI=app.team.test, ALPN h2/http1.1)
   E-->>C: ServerHello + Certificate (signed by our CA) + key exchange
   C->>E: key exchange + ChangeCipherSpec + Finished
   E-->>C: ChangeCipherSpec + Finished   (from here on everything is encrypted)
-  C->>E: [encrypted] GET /api/status  Host: app.teamx.test
+  C->>E: [encrypted] GET /api/status  Host: app.team.test
   Note over E: TLS terminated. Round robin picks next backend
   E->>A: plain HTTP GET /api/status  + X-Forwarded-For, X-Real-IP  (TCP → 3001)
   A-->>E: 200 OK, X-Backend: A, JSON body
@@ -93,7 +99,7 @@ sequenceDiagram
 | Name → IP | 7 Application | Application | DNS | client ephemeral → **UDP 53** | Find *where* the service is |
 | Carry DNS | 4 Transport | Transport | UDP | | One question, one answer, no connection needed |
 | Reliable byte stream | 4 Transport | Transport | TCP | client ephemeral → **TCP 443** | 3-way handshake, sequence/ack numbers, retransmission |
-| Encryption + server identity | 5/6 Session/Presentation | (between Transport and Application) | TLS 1.2 / 1.3 | inside TCP 443 | Confidentiality, integrity, proving the server is really app.teamx.test |
+| Encryption + server identity | 5/6 Session/Presentation | (between Transport and Application) | TLS 1.2 / 1.3 | inside TCP 443 | Confidentiality, integrity, proving the server is really app.team.test |
 | The request itself | 7 Application | Application | HTTP/1.1 or HTTP/2 | | GET, headers, status codes, caching |
 | Getting between Macs | 3 Network | Internet | IPv4 | | Source/destination IP addresses on the same subnet |
 | On the Wi-Fi | 2 Data link | Link | 802.11 / Ethernet frames, ARP | | MAC addresses, the router delivers the frame |

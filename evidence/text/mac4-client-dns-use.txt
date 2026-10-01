@@ -1,0 +1,4 @@
+  ok  saved previous DNS (192.168.50.1 ) to /home/claude/cn-phase1/runtime/dns-backup-mac4-backend-b.txt
+$ (resolv.conf) nameserver 192.168.50.11
+==> DNS servers on mac4-backend-b (/etc/resolv.conf):
+nameserver 192.168.50.11

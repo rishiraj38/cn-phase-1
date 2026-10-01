@@ -5,7 +5,7 @@ Every member should be able to answer all of these about **any** part of the sys
 ### DNS
 
 **What's the difference between DNS resolution and the HTTPS connection that follows?**
-DNS is just a lookup. The client asks Mac 1 "what's the address of app.teamx.test?" over UDP port 53 and gets back Mac 2's IP. Nothing is connected yet. Only after that does the client open a brand-new TCP connection to that IP on port 443 and start TLS. Two different servers, two different protocols, two different ports.
+DNS is just a lookup. The client asks Mac 1 "what's the address of app.team.test?" over UDP port 53 and gets back Mac 2's IP. Nothing is connected yet. Only after that does the client open a brand-new TCP connection to that IP on port 443 and start TLS. Two different servers, two different protocols, two different ports.
 
 **Why `.test` and not `.local`?**
 `.test` is reserved for exactly this kind of testing, so it never collides with a real domain. macOS uses `.local` for Bonjour/mDNS (multicast on the LAN), so `.local` names would never even reach our DNS server.
@@ -17,7 +17,7 @@ How many seconds the client (and any resolver in between) may cache the answer b
 One small question and one small answer, so a TCP handshake would cost more than the query itself. If the answer is too big or gets truncated, DNS falls back to TCP 53.
 
 **What happens if the client asks for google.com?**
-dnsmasq doesn't know it, so it forwards to the upstream resolver (1.1.1.1) and passes the answer back. For anything under teamx.test it answers itself (`local=/teamx.test/`) and never forwards.
+dnsmasq doesn't know it, so it forwards to the upstream resolver (1.1.1.1) and passes the answer back. For anything under team.test it answers itself (`local=/team.test/`) and never forwards.
 
 ### TCP and ports
 

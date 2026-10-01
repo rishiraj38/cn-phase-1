@@ -1,0 +1,61 @@
+# Backend leg (nginx -> backends) is plain HTTP - readable:
+08:40:50.086925 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [P.], seq 1822117143:1822117310, ack 2494374918, win 63, options [nop,nop,TS val 2302475821 ecr 2239037458], length 167
+.<.-.u..GET /healthz HTTP/1.1
+Host: app.team.test
+X-Forwarded-For: 192.168.50.14
+08:40:50.087332 IP 192.168.50.13.3001 > 192.168.50.12.51394: Flags [P.], seq 1:166, ack 167, win 64, options [nop,nop,TS val 2239045189 ecr 2302475821], length 165
+.u.E.<.-HTTP/1.1 200 OK
+X-Backend: A
+08:40:50.087340 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [.], ack 166, win 63, options [nop,nop,TS val 2302475822 ecr 2239045189], length 0
+08:40:50.087375 IP 192.168.50.13.3001 > 192.168.50.12.51394: Flags [P.], seq 166:169, ack 167, win 64, options [nop,nop,TS val 2239045190 ecr 2302475822], length 3
+08:40:50.087377 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [.], ack 169, win 63, options [nop,nop,TS val 2302475822 ecr 2239045190], length 0
+08:40:50.130067 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [P.], seq 2497341417:2497341587, ack 3505331583, win 63, options [nop,nop,TS val 2538577532 ecr 3126490918], length 170
+.O.|.Zw&GET /api/status HTTP/1.1
+Host: app.team.test
+X-Forwarded-For: 192.168.50.14
+08:40:50.130515 IP 192.168.50.14.3002 > 192.168.50.12.50090: Flags [P.], seq 1:174, ack 170, win 64, options [nop,nop,TS val 3126496631 ecr 2538577532], length 173
+.Z.w.O.|HTTP/1.1 200 OK
+X-Backend: B
+08:40:50.130520 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [.], ack 174, win 63, options [nop,nop,TS val 2538577533 ecr 3126496631], length 0
+08:40:50.130544 IP 192.168.50.14.3002 > 192.168.50.12.50090: Flags [P.], seq 174:453, ack 170, win 64, options [nop,nop,TS val 3126496631 ecr 2538577533], length 279
+08:40:50.130546 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [.], ack 453, win 63, options [nop,nop,TS val 2538577533 ecr 3126496631], length 0
+08:40:50.169375 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [P.], seq 167:337, ack 169, win 63, options [nop,nop,TS val 2302475904 ecr 2239045190], length 170
+.<...u.FGET /api/status HTTP/1.1
+Host: app.team.test
+X-Forwarded-For: 192.168.50.14
+08:40:50.169805 IP 192.168.50.13.3001 > 192.168.50.12.51394: Flags [P.], seq 169:342, ack 337, win 64, options [nop,nop,TS val 2239045272 ecr 2302475904], length 173
+.u...<..HTTP/1.1 200 OK
+X-Backend: A
+08:40:50.169809 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [.], ack 342, win 63, options [nop,nop,TS val 2302475904 ecr 2239045272], length 0
+08:40:50.169836 IP 192.168.50.13.3001 > 192.168.50.12.51394: Flags [P.], seq 342:621, ack 337, win 64, options [nop,nop,TS val 2239045272 ecr 2302475904], length 279
+08:40:50.169837 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [.], ack 621, win 63, options [nop,nop,TS val 2302475904 ecr 2239045272], length 0
+08:40:50.207690 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [P.], seq 170:340, ack 453, win 63, options [nop,nop,TS val 2538577610 ecr 3126496631], length 170
+.O...Z.wGET /api/status HTTP/1.1
+Host: app.team.test
+X-Forwarded-For: 192.168.50.14
+08:40:50.208099 IP 192.168.50.14.3002 > 192.168.50.12.50090: Flags [P.], seq 453:626, ack 340, win 64, options [nop,nop,TS val 3126496708 ecr 2538577610], length 173
+.Z...O..HTTP/1.1 200 OK
+X-Backend: B
+08:40:50.208108 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [.], ack 626, win 63, options [nop,nop,TS val 2538577610 ecr 3126496708], length 0
+08:40:50.208137 IP 192.168.50.14.3002 > 192.168.50.12.50090: Flags [P.], seq 626:905, ack 340, win 64, options [nop,nop,TS val 3126496708 ecr 2538577610], length 279
+08:40:50.208139 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [.], ack 905, win 63, options [nop,nop,TS val 2538577610 ecr 3126496708], length 0
+08:40:50.244903 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [P.], seq 337:507, ack 621, win 63, options [nop,nop,TS val 2302475979 ecr 2239045272], length 170
+.<...u..GET /api/status HTTP/1.1
+Host: app.team.test
+X-Forwarded-For: 192.168.50.14
+08:40:50.245427 IP 192.168.50.13.3001 > 192.168.50.12.51394: Flags [P.], seq 621:794, ack 507, win 64, options [nop,nop,TS val 2239045348 ecr 2302475979], length 173
+.u...<..HTTP/1.1 200 OK
+X-Backend: A
+08:40:50.245432 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [.], ack 794, win 63, options [nop,nop,TS val 2302475980 ecr 2239045348], length 0
+08:40:50.245459 IP 192.168.50.13.3001 > 192.168.50.12.51394: Flags [P.], seq 794:1073, ack 507, win 64, options [nop,nop,TS val 2239045348 ecr 2302475980], length 279
+08:40:50.245461 IP 192.168.50.12.51394 > 192.168.50.13.3001: Flags [.], ack 1073, win 63, options [nop,nop,TS val 2302475980 ecr 2239045348], length 0
+08:40:50.284520 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [P.], seq 340:510, ack 905, win 63, options [nop,nop,TS val 2538577687 ecr 3126496708], length 170
+.O...Z..GET /api/status HTTP/1.1
+Host: app.team.test
+X-Forwarded-For: 192.168.50.14
+08:40:50.284864 IP 192.168.50.14.3002 > 192.168.50.12.50090: Flags [P.], seq 905:1078, ack 510, win 64, options [nop,nop,TS val 3126496785 ecr 2538577687], length 173
+.Z...O..HTTP/1.1 200 OK
+X-Backend: B
+08:40:50.284868 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [.], ack 1078, win 63, options [nop,nop,TS val 2538577687 ecr 3126496785], length 0
+08:40:50.284893 IP 192.168.50.14.3002 > 192.168.50.12.50090: Flags [P.], seq 1078:1357, ack 510, win 64, options [nop,nop,TS val 3126496785 ecr 2538577687], length 279
+08:40:50.284895 IP 192.168.50.12.50090 > 192.168.50.14.3002: Flags [.], ack 1357, win 63, options [nop,nop,TS val 2538577687 ecr 3126496785], length 0
