@@ -14,7 +14,9 @@ if [ "${1:-}" = "remove" ]; then
   exit 0
 fi
 
-if [ ! -f "$CA" ]; then
+# Always fetch the CA that the edge is using RIGHT NOW (unless this machine is
+# the edge itself, which has ca.key) - an old ca.crt from git would be wrong.
+if [ ! -f "$TLS_DIR/ca.key" ]; then
   say "Downloading the CA certificate from the edge over plain HTTP"
   HP=""; [ "$HTTP_PORT" = "80" ] || HP=":$HTTP_PORT"
   run curl --noproxy "*" -fsS "http://app.${DOMAIN}${HP}/ca.crt" -o "$CA"
