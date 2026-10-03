@@ -7,7 +7,7 @@ Everything here comes from our real run on 3–4 Oct 2026. Two MacBooks on the c
 
 | Folder | What | Produced by |
 |---|---|---|
-| `inventory/` | Hostname, interface, IP, mask, gateway, MAC address, routes and the ping matrix, for each Mac | `scripts/inventory.sh`, `scripts/ping-matrix.sh` |
+| `inventory/` | Rishi's Mac: hostname, interface, IP, mask, gateway, MAC address, routes and the ping matrix (Kaustubh's Mac: screenshots 03–04) | `scripts/inventory.sh`, `scripts/ping-matrix.sh` |
 | `pcap/` | `full-flow-tls1.2-mac4-20261004-005943.pcap`: one request from Kaustubh's Mac, DNS query/answer → SYN/SYN-ACK/ACK → ClientHello → ServerHello, Certificate → ChangeCipherSpec → encrypted Application Data. We forced TLS 1.2 so the Certificate is visible. | `scripts/capture.sh` |
 | `screenshots/` | 32 screenshots, indexed below | taken during the run |
 

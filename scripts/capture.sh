@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Task G - capture ONE complete request (DNS -> TCP -> TLS -> HTTP) on a client.
-# Run on Mac 1 or Mac 4.  Needs sudo (tcpdump).
+# Run on the client Mac.  Needs sudo (tcpdump).
 #
 #   scripts/capture.sh            TLS 1.2 (default) - every handshake message
 #                                 incl. the Certificate is visible in clear text

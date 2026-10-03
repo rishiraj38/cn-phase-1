@@ -2,7 +2,7 @@
 
 ## What we built
 
-A tiny **private certificate authority (CA)** of our own, plus one **server certificate** for `app.team.test` and `api.team.test` that the CA signed. nginx on Mac 2 presents that certificate. Every client Mac adds our CA to its trust store once. After that, the browser and curl accept the server **with full validation, and no `-k` anywhere**.
+A tiny **private certificate authority (CA)** of our own, plus one **server certificate** for `app.team.test` and `api.team.test` that the CA signed. nginx on the edge (Rishi's Mac, 10.7.16.15) presents that certificate. Every client Mac adds our CA to its trust store once. After that, the browser and curl accept the server **with full validation, and no `-k` anywhere**.
 
 ```
  team Local Root CA   (ca.crt / ca.key)      ← trusted by every client Mac
@@ -50,7 +50,7 @@ ssl_protocols       TLSv1.2 TLSv1.3;
 ```bash
 scripts/trust-ca.sh
 # = curl http://app.team.test/ca.crt -o tls/out/ca.crt
-#   compare SHA-256 fingerprint with the one Mac 2 printed   ← stops a fake CA
+#   compare SHA-256 fingerprint with the one the edge (Rishi's Mac) printed   ← stops a fake CA
 #   sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain tls/out/ca.crt
 ```
 
