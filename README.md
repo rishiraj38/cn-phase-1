@@ -6,7 +6,7 @@ A client types `https://app.team.test`. **Our own DNS server** resolves the name
 
 ## Team
 
-**Team name:** team · **Section:** `<section>` · **Infrastructure:** `<Type N>`, two physical MacBooks on the same Wi-Fi, with the four roles combined (PDF section 3: *"Teams of 2–3 may combine machine roles"*)
+**Team name:** team · **Section:** D · **Infrastructure:** `<Type N>`, two physical MacBooks on the same Wi-Fi, with the four roles combined (PDF section 3: *"Teams of 2–3 may combine machine roles"*)
 
 | Enrollment no. | Name | Mac | Roles |
 |---|---|---|---|
