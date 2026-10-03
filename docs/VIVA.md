@@ -1,6 +1,14 @@
 # Viva Prep: Phase 1
 
-Every member should be able to answer all of these about **any** part of the system, not just their own Mac. The answers are kept short and in plain words. Say them in your own words in the viva.
+Both of us should be able to answer all of these about **any** part of the system, not just our own Mac. "Mac 1/2/3/4" are the PDF's role names: Mac 1, 2 and 3 run on Rishi's Mac (10.7.16.15), and Mac 4 is Kaustubh's (10.7.3.40). The answers are kept short and in plain words. Say them in your own words in the viva.
+
+### Our setup
+
+**You only have two Macs. Is that allowed?**
+Yes. The PDF says teams of 2–3 may combine machine roles. All four roles still exist as separate services on separate ports: DNS :53, edge :443, Backend A :3001, Backend B :3002. Rishi's Mac runs the first three. Backend B runs on Kaustubh's Mac, so load balancing really goes across the network.
+
+**10.7.16.15 and 10.7.3.40 look like different networks. Why can they talk directly?**
+The mask is 255.255.224.0 (/19), so 10.7.0.0 to 10.7.31.255 is one subnet. Both addresses are inside it, both Macs use the same gateway 10.7.0.1, and they reach each other directly on the Wi-Fi.
 
 ### DNS
 
@@ -17,7 +25,7 @@ How many seconds the client (and any resolver in between) may cache the answer b
 One small question and one small answer, so a TCP handshake would cost more than the query itself. If the answer is too big or gets truncated, DNS falls back to TCP 53.
 
 **What happens if the client asks for google.com?**
-dnsmasq doesn't know it, so it forwards to the upstream resolver (1.1.1.1) and passes the answer back. For anything under team.test it answers itself (`local=/team.test/`) and never forwards.
+dnsmasq doesn't know it, so it forwards to the upstream resolver (8.8.8.8) and passes the answer back. For anything under team.test it answers itself (`local=/team.test/`) and never forwards.
 
 ### TCP and ports
 

@@ -67,7 +67,7 @@ If a curl build doesn't read the keychain, our scripts pass `--cacert tls/out/ca
 4. Today's date is inside the validity period.
 5. The server proves it owns the matching **private key** by signing the handshake (CertificateVerify in TLS 1.3, ServerKeyExchange in TLS 1.2). Copying `server.crt` alone is useless without `server.key`.
 
-If you type the IP (`https://192.168.50.12`), check 3 fails because the IP isn't in the SAN. That's one more reason the demo always uses the name.
+If you type the IP (`https://10.7.16.15`), check 3 fails because the IP isn't in the SAN. That's one more reason the demo always uses the name.
 
 ## The handshake (what we point at in Wireshark)
 

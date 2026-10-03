@@ -1,9 +1,0 @@
-==> Fingerprint of the CA we got - compare with the one printed on Mac 2:
-subject=CN = team Local Root CA, O = team
-sha256 Fingerprint=E5:36:DD:57:55:A7:AD:A4:32:19:7E:F0:CD:A4:D2:C5:98:F5:9B:C1:26:8F:76:80:93:0F:7F:7E:D6:85:2F:FC
-$ sudo cp /home/claude/cn-phase1/tls/out/ca.crt /usr/local/share/ca-certificates/team-ca.crt
-$ sudo update-ca-certificates
-1 added, 0 removed; done.
-==> Test (note: no -k anywhere)
-$ curl -sS --noproxy * -o /dev/null -w HTTP %{http_code}  ssl_verify_result=%{ssl_verify_result} (0 = certificate trusted)\n https://app.team.test/api/status
-HTTP 200  ssl_verify_result=0 (0 = certificate trusted)

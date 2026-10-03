@@ -24,7 +24,7 @@ if [ -n "$LO" ]; then
   sudo tcpdump -i "$LO" -s 0 -U -w "$PCAP.lo" "tcp port ${BACKEND_A_PORT} or tcp port ${BACKEND_B_PORT}" >/dev/null 2>&1 &
   PID2=$!
 fi
-sleep "$SECS"; sudo kill -INT $PID $PID2 2>/dev/null; wait $PID $PID2 2>/dev/null   # (macOS has no `timeout`)
+sleep "$SECS"; sudo pkill -INT -x tcpdump; wait $PID $PID2 2>/dev/null  
 MERGECAP="$(command -v mergecap || ls /Applications/Wireshark.app/Contents/MacOS/mergecap 2>/dev/null || true)"
 if [ -n "$LO" ] && [ -n "$MERGECAP" ]; then
   sudo "$MERGECAP" -F pcapng -w "$PCAP" "$PCAP.wifi" "$PCAP.lo" && sudo rm -f "$PCAP.wifi" "$PCAP.lo"

@@ -40,7 +40,7 @@ SSLKEYLOGFILE="$KEYS" run curl -sS "${CURL_TLS[@]}" "${TLSARG[@]}" -D - -o /dev/
 sleep 2
 
 say "4) Stopping capture"
-sudo kill -INT "$TCPDUMP_PID" 2>/dev/null; wait "$TCPDUMP_PID" 2>/dev/null
+sudo pkill -INT -x tcpdump; wait "$TCPDUMP_PID" 2>/dev/null
 sudo chown "$RUN_USER" "$PCAP" 2>/dev/null || true
 [ -s "$KEYS" ] || rm -f "$KEYS"
 

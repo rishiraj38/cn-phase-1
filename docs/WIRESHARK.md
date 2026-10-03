@@ -2,7 +2,7 @@
 
 ## Capture
 
-On a client Mac (Mac 1 or Mac 4):
+On the client (Kaustubh's Mac):
 ```bash
 scripts/capture.sh
 ```
@@ -13,24 +13,22 @@ It flushes the DNS cache (so a real DNS query happens), starts `tcpdump` with th
 - `evidence/text/capture-<host>-<time>.txt`: a text decode (tcpdump + tshark)
 - `evidence/pcap/sslkeys-<host>-<time>.log`: TLS secrets (if your curl supports it)
 
-On Mac 2 (optional but impressive): `scripts/capture-edge.sh 20` while a client runs `scripts/verify.sh lb`. You'll see the same requests **encrypted** on :443 and **in plain text** on :3001/:3002. That's TLS termination, proven.
+On the edge, Rishi's Mac (optional): `scripts/capture-edge.sh 20` while a client runs `scripts/verify.sh lb`. You'll see the same requests **encrypted** on :443 and **in plain text** on :3001/:3002. That's TLS termination, proven.
 
-## Screenshots (all in `evidence/screenshots/`, taken in Wireshark from our captures)
+## Screenshots (in `evidence/screenshots/`, from `evidence/pcap/full-flow-tls1.2-mac4-20261004-005943.pcap`)
 
-| # | Wireshark display filter | Point at | Screenshot name |
+Client 10.7.3.40 (Kaustubh) ↔ DNS/edge 10.7.16.15 (Rishi). One request: `curl --tls-max 1.2 https://app.team.test/api/status`.
+
+| # | Wireshark display filter | What it shows | File |
 |---|---|---|---|
-| 1 | `dns` | Query `A app.team.test` from client:ephemeral → Mac1:**53/UDP**. Response with **Mac 2's IP**, TTL 60, flag `aa` (authoritative) | `01-dns-query-response.png` |
-| 2 | `tcp.flags.syn==1 or (tcp.seq==1 and tcp.ack==1 and tcp.len==0)` | **SYN → SYN-ACK → ACK**, client ephemeral port → **443** | `02-tcp-three-way-handshake.png` |
-| 3 | `tcp.stream eq 0` then the SYN packet → expand TCP | Sequence number, ack number, window, MSS option | `03-tcp-seq-ack-numbers.png` |
-| 4 | `tls.handshake.type == 1` → expand TLS | **ClientHello**: SNI `app.team.test`, cipher suites, ALPN `h2` | `04-tls-client-hello.png` |
-| 5 | `tls.handshake` | **ServerHello, Certificate** (expand it: subject `app.team.test`, issuer `team Local Root CA`), key exchange | `05-tls-server-hello-certificate.png` |
-| 6 | `tls.record.content_type == 20` | **ChangeCipherSpec** from both sides | `06-tls-change-cipher-spec.png` |
-| 7 | `tls.app_data` | **Application Data**: the HTTP is unreadable in the bytes pane | `07-encrypted-application-data.png` |
-| 8 | Statistics → Flow Graph | The whole DNS → TCP → TLS → data → FIN timeline on one screen | `08-flow-graph.png` |
-| 9 | (Mac 2 capture) `http` | Backend leg: `GET /api/status`, `X-Forwarded-For`, `X-Backend: A` in clear text | `09-edge-to-backend-plain-http.png` |
-
-| 10 | TLS 1.3 capture, `tls` | ServerHello then only "Application Data": in TLS 1.3 the Certificate itself is encrypted | `10-tls13-certificate-encrypted.png` |
-| 11 | TLS 1.3 capture + key log, `http2` | The decrypted HTTP/2 request/response inside TLS (only possible because we hold the session keys) | `11-tls13-decrypted-with-keylog.png` |
+| 20 | `dns.qry.name == "app.team.test"` | Query 10.7.3.40:64246 → 10.7.16.15:**53/UDP**; the response has answer **10.7.16.15**, TTL 60, flag "Server is an authority for domain" | `20-ws-dns.png` |
+| 21 | `tcp.port == 443 && (tcp.flags.syn == 1 \|\| (tcp.seq == 1 && tcp.ack == 1 && tcp.len == 0))` | **SYN → SYN, ACK → ACK**, ephemeral port 63991 → **443** | `21-ws-tcp-handshake.png` |
+| 22 | `tcp.stream eq 0`, SYN-ACK selected | Server seq 0 (raw 264361562), **ack 1 (raw 2029005160 = client's ISN 2029005159 + 1)**, window 65535 | `22-ws-tcp-seq-ack.png` |
+| 23 | `tls.handshake.type == 1` | **ClientHello**, extension `server_name` = **app.team.test** (SNI) | `23-ws-tls-client-hello.png` |
+| 24 | `tls.handshake`, packet 13 | **Certificate**: issuer `team Local Root CA`, subject `app.team.test` (plus Server Key Exchange, Server Hello Done) | `24-ws-tls-certificate.png` |
+| 25 | `tls.record.content_type == 20` | Client Key Exchange → **Change Cipher Spec** → Encrypted Handshake Message (and the same from the server) | `25-ws-change-cipher-spec.png` |
+| 26 | `tls.app_data` | **Application Data**: the HTTP/2 request is just encrypted bytes | `26-ws-encrypted-data.png` |
+| 27 | Statistics → Flow Graph | The whole DNS → TCP → TLS → data timeline between the two Macs | `27-ws-flow-graph.png` |
 
 Tip: View → Time Display Format → Seconds Since Previous Displayed Packet makes it easy to show that DNS happens *before* the SYN.
 
@@ -48,9 +46,9 @@ Wireshark shows *relative* numbers (start at 0) by default. The text file has th
 
 | Layer | Source | Destination |
 |---|---|---|
-| DNS | client IP : **ephemeral** (e.g. 53012) / UDP | Mac 1 : **53** / UDP |
-| HTTPS | client IP : **ephemeral** (e.g. 53128) / TCP | Mac 2 : **443** / TCP |
-| Edge → backend | Mac 2 : **ephemeral** / TCP | Mac 3 : **3001** or Mac 4 : **3002** / TCP |
+| DNS | 10.7.3.40 : **ephemeral** (64246 in our capture) / UDP | 10.7.16.15 : **53** / UDP |
+| HTTPS | 10.7.3.40 : **ephemeral** (63991 in our capture) / TCP | 10.7.16.15 : **443** / TCP |
+| Edge → backend | 10.7.16.15 : **ephemeral** / TCP | 10.7.16.15 : **3001** (A) or 10.7.3.40 : **3002** (B) / TCP |
 
 A socket pair (client IP, client port, server IP, server port) + protocol identifies a single connection. `scripts/verify.sh ports` prints it for a live request.
 

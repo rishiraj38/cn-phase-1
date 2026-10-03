@@ -1,0 +1,11 @@
+# Ping matrix from Rishis-MacBook-Pro - Sun Oct  4 00:16:58 IST 2026
+
+## Mac1-DNS+Mac2-Edge+Mac3-BackendA (10.7.16.15)
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 0.138/0.269/0.360/0.095 ms
+RESULT: Mac1-DNS+Mac2-Edge+Mac3-BackendA reachable
+
+## Mac4-BackendB (10.7.3.40)
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 39.300/113.048/179.406/57.436 ms
+RESULT: Mac4-BackendB reachable

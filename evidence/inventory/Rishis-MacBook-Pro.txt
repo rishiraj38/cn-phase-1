@@ -1,0 +1,21 @@
+# Inventory - Rishis-MacBook-Pro - Server Mac - DNS + Edge + Backend A
+collected: Sun Oct  4 00:16:08 IST 2026
+
+Hostname           Rishis-MacBook-Pro.local
+Role               Server Mac - DNS + Edge + Backend A
+Interface          en0 (Wi-Fi)
+IPv4 address       10.7.16.15
+Subnet mask        255.255.224.0 (/19)
+Default gateway    10.7.0.1
+MAC address        b2:bb:00:bb:a2:b6
+DNS servers        There aren't any DNS Servers set on Wi-Fi. 
+
+## raw: interface
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	ether b2:bb:00:bb:a2:b6
+	inet6 fe80::1caa:9225:bc05:25d1%en0 prefixlen 64 secured scopeid 0xe 
+	inet 10.7.16.15 netmask 0xffffe000 broadcast 10.7.31.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
