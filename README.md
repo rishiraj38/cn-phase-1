@@ -10,8 +10,8 @@ A client types `https://app.team.test`. **Our own DNS server** resolves the name
 
 | Enrollment no. | Name | Mac | Roles |
 |---|---|---|---|
-| `<enroll-no>` | Rishi Raj | Rishi's MacBook Pro, **10.7.16.15** | DNS server (dnsmasq), edge (nginx reverse proxy, TLS, load balancer), Backend A |
-| `<enroll-no>` | Kaustubh Ranjan Mishra | Kaustubh's MacBook Pro, **10.7.3.40** | Backend B, test client (browser, curl, dig), Wireshark capture |
+| 2401010380 | Rishi Raj | Rishi's MacBook Pro, **10.7.16.15** | DNS server (dnsmasq), edge (nginx reverse proxy, TLS, load balancer), Backend A |
+| 2401020116 | Kaustubh Ranjan Mishra | Kaustubh's MacBook Pro, **10.7.3.40** | Backend B, test client (browser, curl, dig), Wireshark capture |
 
 ## Topology
 
