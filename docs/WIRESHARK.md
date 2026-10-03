@@ -13,7 +13,6 @@ It flushes the DNS cache (so a real DNS query happens), starts `tcpdump` with th
 - `evidence/text/capture-<host>-<time>.txt`: a text decode (tcpdump + tshark)
 - `evidence/pcap/sslkeys-<host>-<time>.log`: TLS secrets (if your curl supports it)
 
-On the edge, Rishi's Mac (optional): `scripts/capture-edge.sh 20` while a client runs `scripts/verify.sh lb`. You'll see the same requests **encrypted** on :443 and **in plain text** on :3001/:3002. That's TLS termination, proven.
 
 ## Screenshots (in `evidence/screenshots/`, from `evidence/pcap/full-flow-tls1.2-mac4-20261004-005943.pcap`)
 

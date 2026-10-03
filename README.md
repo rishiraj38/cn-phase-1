@@ -44,8 +44,8 @@ dns/                      ← dnsmasq template + the exact config we ran (dnsmas
 edge/                     ← nginx template + the exact config we ran (nginx.conf.example)
 tls/make-certs.sh         ← local CA + server certificate (OpenSSL); tls/out/*.crt = the public certs we used
 scripts/                  ← one script per job (DNS, edge, backends, client setup, verify, capture, failures)
-docs/                     ← architecture, TLS, caching, Wireshark guide, failures, demo video script, viva prep
-evidence/                 ← everything from our real run: inventory, pcap, text output, 32 screenshots
+docs/                     ← architecture, TLS, caching, Wireshark guide, failure demos
+evidence/                 ← everything from our real run: inventory, pcap, 32 screenshots
 ```
 
 ## How to run it (two Macs)
@@ -104,5 +104,3 @@ All screenshots are in [`evidence/screenshots/`](evidence/screenshots/). The ind
 | F: HTTP caching | `/api/info` (Cache-Control + ETag), [docs/CACHING.md](docs/CACHING.md) | `18` (200 → 304 from both backends), `19` (DevTools 304) |
 | G: Full protocol flow | `scripts/capture.sh`, [docs/WIRESHARK.md](docs/WIRESHARK.md) | `evidence/pcap/full-flow-tls1.2-*.pcap`, `20`–`27` (DNS → TCP → TLS → encrypted data, flow graph) |
 | 6.3: Failure demos | `scripts/failure-demo.sh`, [docs/FAILURES.md](docs/FAILURES.md) | `28`–`32` |
-
-Viva prep: [docs/VIVA.md](docs/VIVA.md). Demo video script: [docs/DEMO_VIDEO.md](docs/DEMO_VIDEO.md).

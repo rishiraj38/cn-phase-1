@@ -1,6 +1,6 @@
 # Failure Demonstrations (PDF section 6.3)
 
-We ran every scenario from the **client (Kaustubh's Mac, 10.7.3.40)** with `scripts/failure-demo.sh 1 … 5`. When the script pauses, you break something on the other Mac. The output of each run is saved in `evidence/failures/`.
+We ran every scenario from the **client (Kaustubh's Mac, 10.7.3.40)** with `scripts/failure-demo.sh 1 … 5`. When the script pauses, you break something on the other Mac. Screenshots 28–32 show each run.
 
 Every scenario uses the same three probes, so you can see exactly **which layer** broke:
 `dig app.team.test` (DNS) → `ping 10.7.16.15` (IP) → `curl https://app.team.test/api/status` (TCP + TLS + HTTP).
