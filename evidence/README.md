@@ -7,8 +7,10 @@ Everything here comes from our real run on 3–4 Oct 2026. Two MacBooks on the c
 
 | Folder | What | Produced by |
 |---|---|---|
-| `inventory/` | Rishi's Mac: hostname, interface, IP, mask, gateway, MAC address, routes and the ping matrix (Kaustubh's Mac: screenshots 03–04) | `scripts/inventory.sh`, `scripts/ping-matrix.sh` |
-| `pcap/` | `full-flow-tls1.2-mac4-20261004-005943.pcap`: one request from Kaustubh's Mac, DNS query/answer → SYN/SYN-ACK/ACK → ClientHello → ServerHello, Certificate → ChangeCipherSpec → encrypted Application Data. We forced TLS 1.2 so the Certificate is visible. | `scripts/capture.sh` |
+| `inventory/` | Each Mac's hostname, interface, IP, mask, gateway, MAC address, routes and ping matrix. Kaustubh's Mac has two runs: before (`Kaustubhs-MacBook-Pro.txt`) and after (`mac4.txt`) it switched to our DNS, which is why the hostname and the DNS server change | `scripts/inventory.sh`, `scripts/ping-matrix.sh` |
+| `text/` | Text output from Kaustubh's Mac: load balancing (10 requests, A=5 B=5), caching (200 → 304 from A and B), and a full text decode of the second capture | `scripts/verify.sh lb`, `scripts/verify.sh cache`, `scripts/capture.sh` |
+| `failures/` | Text output of the five failure scenarios, as run on 4 Oct (same runs as screenshots 28–32) | `scripts/failure-demo.sh` |
+| `pcap/` | `full-flow-tls1.2-mac4-20261004-005943.pcap` (screenshots 20–27) and a second capture `…-010817.pcap`, each one request from Kaustubh's Mac, DNS query/answer → SYN/SYN-ACK/ACK → ClientHello → ServerHello, Certificate → ChangeCipherSpec → encrypted Application Data. We forced TLS 1.2 so the Certificate is visible. The `sslkeys-*.log` files are the TLS session keys curl wrote, so Wireshark can decrypt our own captures. | `scripts/capture.sh` |
 | `screenshots/` | 32 screenshots, indexed below | taken during the run |
 
 ## Screenshot index (`screenshots/`)

@@ -1,0 +1,62 @@
+# Capture on mac4 (en0) - Sun Oct  4 01:08:22 IST 2026
+# filter: (udp port 53 and host 10.7.16.15) or (tcp port 443 and host 10.7.16.15)
+
+## Every packet (tcpdump -nn -S: numeric ports, absolute seq/ack numbers)
+01:08:18.116727 IP 10.7.16.15.53 > 10.7.3.40.51980: 5173 NXDomain 0/0/0 (55)
+01:08:18.116729 IP 10.7.16.15.53 > 10.7.3.40.56922: 54274 NXDomain 0/0/0 (55)
+01:08:18.116731 IP 10.7.16.15.53 > 10.7.3.40.57707: 33968 NXDomain 0/0/0 (54)
+01:08:19.252857 IP 10.7.3.40.61794 > 10.7.16.15.53: 62816+ A? telemetry.individual.githubcopilot.com. (56)
+01:08:19.284523 IP 10.7.16.15.53 > 10.7.3.40.61794: 62816 3/0/0 CNAME copilot-telemetry-service.githubusercontent.com., CNAME glb-db52c2cf8be544.github.com., A 140.82.112.22 (170)
+01:08:20.125638 IP 10.7.3.40.58545 > 10.7.16.15.53: 22779+ A? app.team.test. (31)
+01:08:20.140090 IP 10.7.16.15.53 > 10.7.3.40.58545: 22779* 1/0/0 A 10.7.16.15 (47)
+01:08:20.141411 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [S], seq 2307571690, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 4095009133 ecr 0,sackOK,eol], length 0
+01:08:20.147097 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [S.], seq 4184136154, ack 2307571691, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 3184243694 ecr 4095009133,sackOK,eol], length 0
+01:08:20.147278 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [.], ack 4184136155, win 2059, options [nop,nop,TS val 4095009139 ecr 3184243694], length 0
+01:08:20.147574 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [P.], seq 2307571691:2307571921, ack 4184136155, win 2059, options [nop,nop,TS val 4095009139 ecr 3184243694], length 230
+01:08:20.153859 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [.], ack 2307571921, win 2056, options [nop,nop,TS val 3184243701 ecr 4095009139], length 0
+01:08:20.159417 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [.], seq 4184136155:4184137603, ack 2307571921, win 2056, options [nop,nop,TS val 3184243706 ecr 4095009139], length 1448
+01:08:20.159419 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [P.], seq 4184137603:4184138308, ack 2307571921, win 2056, options [nop,nop,TS val 3184243706 ecr 4095009139], length 705
+01:08:20.159468 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [.], ack 4184138308, win 2026, options [nop,nop,TS val 4095009152 ecr 3184243706], length 0
+01:08:20.160587 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [P.], seq 2307571921:2307572006, ack 4184138308, win 2048, options [nop,nop,TS val 4095009153 ecr 3184243706], length 85
+01:08:20.167526 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [.], ack 2307572006, win 2055, options [nop,nop,TS val 3184243715 ecr 4095009153], length 0
+01:08:20.168416 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [P.], seq 4184138308:4184138351, ack 2307572006, win 2055, options [nop,nop,TS val 3184243715 ecr 4095009153], length 43
+01:08:20.168419 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [P.], seq 4184138351:4184138412, ack 2307572006, win 2055, options [nop,nop,TS val 3184243715 ecr 4095009153], length 61
+01:08:20.168454 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [.], ack 4184138412, win 2047, options [nop,nop,TS val 4095009160 ecr 3184243715], length 0
+01:08:20.168806 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [P.], seq 2307572006:2307572100, ack 4184138412, win 2048, options [nop,nop,TS val 4095009161 ecr 3184243715], length 94
+01:08:20.168862 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [P.], seq 2307572100:2307572168, ack 4184138412, win 2048, options [nop,nop,TS val 4095009161 ecr 3184243715], length 68
+01:08:20.185596 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [P.], seq 4184138412:4184138442, ack 2307572168, win 2053, options [nop,nop,TS val 3184243729 ecr 4095009161], length 30
+01:08:20.185599 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [.], ack 2307572168, win 2053, options [nop,nop,TS val 3184243728 ecr 4095009161], length 0
+01:08:20.185670 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [.], ack 4184138442, win 2048, options [nop,nop,TS val 4095009178 ecr 3184243729], length 0
+01:08:20.218663 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [P.], seq 4184138442:4184138847, ack 2307572168, win 2053, options [nop,nop,TS val 3184243765 ecr 4095009178], length 405
+01:08:20.218776 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [.], ack 4184138847, win 2042, options [nop,nop,TS val 4095009210 ecr 3184243765], length 0
+01:08:20.219460 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [P.], seq 2307572168:2307572191, ack 4184138847, win 2048, options [nop,nop,TS val 4095009211 ecr 3184243765], length 23
+01:08:20.220703 IP 10.7.3.40.49707 > 10.7.16.15.443: Flags [F.], seq 2307572191, ack 4184138847, win 2048, options [nop,nop,TS val 4095009213 ecr 3184243765], length 0
+01:08:20.225485 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [.], ack 2307572191, win 2053, options [nop,nop,TS val 3184243773 ecr 4095009211], length 0
+01:08:20.225489 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [.], ack 2307572192, win 2053, options [nop,nop,TS val 3184243773 ecr 4095009213], length 0
+01:08:20.226546 IP 10.7.16.15.443 > 10.7.3.40.49707: Flags [R.], seq 4184138847, ack 2307572192, win 2053, length 0
+
+## DNS query/response
+1	10.7.16.15	53	10.7.3.40	51980	db._dns-sd._udp.0.0.7.10.in-addr.arpa		
+2	10.7.16.15	53	10.7.3.40	56922	lb._dns-sd._udp.0.0.7.10.in-addr.arpa		
+3	10.7.16.15	53	10.7.3.40	57707	b._dns-sd._udp.0.0.7.10.in-addr.arpa		
+4	10.7.3.40	61794	10.7.16.15	53	telemetry.individual.githubcopilot.com		
+5	10.7.16.15	53	10.7.3.40	61794	telemetry.individual.githubcopilot.com	140.82.112.22	2697,3498,14
+6	10.7.3.40	58545	10.7.16.15	53	app.team.test		
+7	10.7.16.15	53	10.7.3.40	58545	app.team.test	10.7.16.15	60
+
+## TCP three-way handshake (SYN / SYN-ACK / ACK) with relative seq/ack
+8	10.7.3.40	49707	10.7.16.15	443	··········S·	0	0
+9	10.7.16.15	443	10.7.3.40	49707	·······A··S·	0	1
+10	10.7.3.40	49707	10.7.16.15	443	·······A····	1	1
+
+## TLS handshake messages
+11	10.7.3.40	Client Hello (SNI=app.team.test)
+13	10.7.16.15	Server Hello
+14	10.7.16.15	Certificate, Server Key Exchange, Server Hello Done
+16	10.7.3.40	Client Key Exchange, Change Cipher Spec, Encrypted Handshake Message
+18	10.7.16.15	Change Cipher Spec, Encrypted Handshake Message
+19	10.7.16.15	Application Data
+21	10.7.3.40	Application Data
+22	10.7.3.40	Application Data
+23	10.7.16.15	Application Data
+26	10.7.16.15	Application Data

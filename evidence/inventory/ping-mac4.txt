@@ -1,0 +1,11 @@
+# Ping matrix from mac4 - Sun Oct  4 00:23:30 IST 2026
+
+## Mac1-DNS+Mac2-Edge+Mac3-BackendA (10.7.16.15)
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 10.059/51.519/94.601/34.533 ms
+RESULT: Mac1-DNS+Mac2-Edge+Mac3-BackendA reachable
+
+## Mac4-BackendB (10.7.3.40)
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 0.209/0.259/0.321/0.047 ms
+RESULT: Mac4-BackendB reachable

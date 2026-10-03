@@ -1,0 +1,43 @@
+# Inventory - Kaustubhs-MacBook-Pro - Client Mac - Backend B + client
+collected: Sat Oct  3 23:57:19 IST 2026
+
+Hostname           Kaustubhs-MacBook-Pro.local
+Role               Client Mac - Backend B + client
+Interface          en0 (Wi-Fi)
+IPv4 address       10.7.3.40
+Subnet mask        255.255.224.0 (/19)
+Default gateway    10.7.0.1
+MAC address        0a:00:71:48:7d:13
+DNS servers        There aren't any DNS Servers set on Wi-Fi. 
+
+## raw: interface
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	ether 0a:00:71:48:7d:13
+	inet6 fe80::1475:85a3:e175:948d%en0 prefixlen 64 secured scopeid 0xb 
+	inet 10.7.3.40 netmask 0xffffe000 broadcast 10.7.31.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+
+## raw: routing table (IPv4)
+Routing tables
+
+Internet:
+Destination        Gateway            Flags               Netif Expire
+default            10.7.0.1           UGScg                 en0       
+10.7/19            link#11            UCS                   en0      !
+10.7.0.1/32        link#11            UCS                   en0      !
+10.7.0.1           c0:c5:20:6f:38:ee  UHLWIir               en0   1200
+10.7.0.212         36:fa:ab:ac:7e:8c  UHLWI                 en0    947
+10.7.0.214         f2:33:f7:57:95:a2  UHLWI                 en0   1055
+10.7.0.221         9e:fd:fb:74:7f:fc  UHLWI                 en0   1194
+10.7.0.223         2e:f5:c6:47:97:74  UHLWI                 en0    786
+10.7.1.2           2:96:f5:81:59:92   UHLWI                 en0    869
+10.7.1.3           80:47:15:a0:e7:23  UHLWI                 en0    882
+10.7.1.26          2:4c:9a:a:99:17    UHLWI                 en0    828
+10.7.1.37          f2:6f:88:46:2c:aa  UHLWI                 en0   1197
+10.7.1.50          2:6f:70:fe:c1:66   UHLWI                 en0   1040
+10.7.1.63          7a:f2:9a:13:c4:e6  UHLWI                 en0    914
+10.7.1.81          36:19:98:3d:6f:1b  UHLWI                 en0   1074
+10.7.1.97          12:ec:73:d4:51:26  UHLWI                 en0   1068

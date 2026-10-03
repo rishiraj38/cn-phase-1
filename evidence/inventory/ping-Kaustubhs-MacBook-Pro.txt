@@ -1,0 +1,11 @@
+# Ping matrix from Kaustubhs-MacBook-Pro - Sat Oct  3 23:57:28 IST 2026
+
+## Mac1-DNS+Mac2-Edge+Mac3-BackendA (10.7.16.15)
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 5.553/26.881/46.189/16.651 ms
+RESULT: Mac1-DNS+Mac2-Edge+Mac3-BackendA reachable
+
+## Mac4-BackendB (10.7.3.40)
+3 packets transmitted, 3 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 0.222/0.242/0.273/0.022 ms
+RESULT: Mac4-BackendB reachable

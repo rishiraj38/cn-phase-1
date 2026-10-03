@@ -45,7 +45,7 @@ edge/                     ← nginx template + the exact config we ran (nginx.co
 tls/make-certs.sh         ← local CA + server certificate (OpenSSL); tls/out/*.crt = the public certs we used
 scripts/                  ← one script per job (DNS, edge, backends, client setup, verify, capture, failures)
 docs/                     ← architecture, TLS, caching, Wireshark guide, failure demos
-evidence/                 ← everything from our real run: inventory, pcap, 32 screenshots
+evidence/                 ← everything from our real run: inventory, text output, failure runs, pcaps, 32 screenshots
 ```
 
 ## How to run it (two Macs)
@@ -99,8 +99,8 @@ All screenshots are in [`evidence/screenshots/`](evidence/screenshots/). The ind
 | A: Private LAN | `team.env`, `scripts/inventory.sh`, `scripts/ping-matrix.sh` | `01`–`04` (both Macs: IP, /19 mask, gateway, MAC, ping matrix), `evidence/inventory/` |
 | B: Private DNS | `dns/dnsmasq.conf.example`, `scripts/dns.sh`, `scripts/client-dns.sh` | `10` (answer from our server, `aa` flag, TTL 60), `11` (client uses our DNS: `SERVER: 10.7.16.15#53`), `20` (Wireshark) |
 | C: Two backends | `backend/server.py`, `scripts/backend.sh` | `05`, `06` (A on :3001, B on :3002, requests from the edge with `X-Forwarded-For`) |
-| D: Reverse proxy + LB | `edge/nginx.conf.example` (round robin + passive health check) | `08` (nginx on :80/:443, both backends reachable), `09`, `14` (A/B alternating), `15`, `16` (browser) |
+| D: Reverse proxy + LB | `edge/nginx.conf.example` (round robin + passive health check) | `08` (nginx on :80/:443, both backends reachable), `09`, `14` (A/B alternating), `15`, `16` (browser), `evidence/text/verify-*-lb.txt` |
 | E: HTTPS / TLS | `tls/make-certs.sh`, `scripts/trust-ca.sh`, [docs/TLS.md](docs/TLS.md) | `07` (cert + SAN + CA fingerprint), `12` (client trusts CA, `verify_result=0`), `13` (`curl -v`, no `-k`), `17` (browser certificate), `23`–`26` (Wireshark) |
-| F: HTTP caching | `/api/info` (Cache-Control + ETag), [docs/CACHING.md](docs/CACHING.md) | `18` (200 → 304 from both backends), `19` (DevTools 304) |
+| F: HTTP caching | `/api/info` (Cache-Control + ETag), [docs/CACHING.md](docs/CACHING.md) | `18` (200 → 304 from both backends), `19` (DevTools 304), `evidence/text/verify-*-cache.txt` |
 | G: Full protocol flow | `scripts/capture.sh`, [docs/WIRESHARK.md](docs/WIRESHARK.md) | `evidence/pcap/full-flow-tls1.2-*.pcap`, `20`–`27` (DNS → TCP → TLS → encrypted data, flow graph) |
-| 6.3: Failure demos | `scripts/failure-demo.sh`, [docs/FAILURES.md](docs/FAILURES.md) | `28`–`32` |
+| 6.3: Failure demos | `scripts/failure-demo.sh`, [docs/FAILURES.md](docs/FAILURES.md) | `28`–`32`, `evidence/failures/` |

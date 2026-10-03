@@ -1,0 +1,11 @@
+$ curl -sS --noproxy * --tls-max 1.2 -D - -o /dev/null -w client %{local_ip}:%{local_port} -> server %{remote_ip}:%{remote_port}\n https://app.team.test/api/status
+HTTP/2 200 
+server: nginx
+date: Sat, 03 Oct 2026 19:38:20 GMT
+content-type: application/json
+content-length: 272
+x-backend: B
+cache-control: no-store
+x-edge: mac2-nginx
+
+client 10.7.3.40:49707 -> server 10.7.16.15:443
