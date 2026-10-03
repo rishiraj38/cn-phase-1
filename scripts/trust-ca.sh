@@ -24,9 +24,9 @@ if [ ! -f "$TLS_DIR/ca.key" ]; then
   run curl --noproxy "*" -fsS "http://app.${DOMAIN}${HP}/ca.crt" -o "$CA"
 fi
 
-say "Fingerprint of the CA we got - compare with the one printed on Mac 2:"
+say "Fingerprint of the CA we got - compare with the one printed on ${EDGE_MAC:-Mac 2}:"
 openssl x509 -in "$CA" -noout -subject -fingerprint -sha256
-read -r -p "Does it match what Mac 2 shows? [y/N] " yn
+read -r -p "Does it match what ${EDGE_MAC:-Mac 2} shows? [y/N] " yn
 [ "$yn" = "y" ] || [ "$yn" = "Y" ] || die "not trusting an unverified CA"
 
 if is_mac; then

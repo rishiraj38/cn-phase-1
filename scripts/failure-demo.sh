@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Section 6.3 - the five required failure demonstrations.
-# Run on a CLIENT Mac (Mac 1 or Mac 4). Some steps ask you to do something on
+# Run on the CLIENT Mac. Some steps ask you to do something on
 # another Mac first; the script waits for Enter.  Output of every scenario is
 # saved in evidence/failures/.
 #
@@ -37,20 +37,20 @@ f1() {  # wrong DNS server on the client
 
 f2() {  # DNS record points at the wrong IP
   say "F2  DNS record points to a wrong IP"
-  pause "On Mac 1 run:   scripts/dns.sh wrong-record      (app.${DOMAIN} -> ${WRONG_IP})"
+  pause "On ${DNS_MAC} run:   scripts/dns.sh wrong-record      (app.${DOMAIN} -> ${WRONG_IP})"
   flush_dns_cache
   probe
   echo "--- verbose: where does curl actually go?"
   curl -sv "${CURL_TLS[@]}" --max-time 5 "$APP_URL/" 2>&1 | grep -E "Trying|Connected|connect to|Failed|refused" | sed 's/^/    /'
   echo "WHY: resolution SUCCEEDS, but returns ${WRONG_IP}, which has nothing on :${HTTPS_PORT}."
   echo "     DNS is just a directory - it hands out an address, it does not make a connection."
-  pause "On Mac 1 run:   scripts/dns.sh fix"
+  pause "On ${DNS_MAC} run:   scripts/dns.sh fix"
   flush_dns_cache; probe
 }
 
 f3() {  # one backend stopped
   say "F3  One backend stopped"
-  pause "On Mac 3 stop Backend A   (Ctrl+C, or scripts/backend.sh stop A)"
+  pause "On ${A_MAC} stop Backend A   (Ctrl+C in its window, or scripts/backend.sh stop A)"
   for i in $(seq 1 6); do
     curl -sS "${CURL_TLS[@]}" -o /dev/null -D - -w '' "$APP_URL/api/status" \
       | awk -v i="$i" -F': ' '/^HTTP/{s=$0} tolower($1)=="x-backend"{gsub("\r","");printf "request %d -> %s  X-Backend: %s\n", i, s, $2}' | tr -d '\r'
@@ -61,13 +61,13 @@ f3() {  # one backend stopped
 
 f4() {  # both backends stopped
   say "F4  Both backends stopped"
-  pause "On Mac 4 stop Backend B too   (Backend A should still be stopped)"
+  pause "On ${B_MAC} stop Backend B too   (Ctrl+C in its window; Backend A stays stopped)"
   probe
   echo "--- verbose: TLS works, the error comes from nginx itself"
   curl -sv "${CURL_TLS[@]}" "$APP_URL/api/status" 2>&1 | grep -E "SSL connection|verify ok|subject:|^< HTTP|<h1>" | sed 's/^/    /'
   echo "WHY: DNS ok, TCP ok, TLS ok (handled by the edge) - only the upstream is gone, so nginx"
   echo "     answers 502 Bad Gateway. That is exactly where the edge ends and the backend begins."
-  pause "Start both backends again (Mac 3: scripts/backend.sh run A, Mac 4: scripts/backend.sh run B)"
+  pause "Start both backends again (${A_MAC}: scripts/backend.sh run A, ${B_MAC}: scripts/backend.sh run B)"
   echo "    waiting 10 s - nginx keeps a failed backend out of the pool for fail_timeout=10s"; sleep 10
   probe
 }
