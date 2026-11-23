@@ -1,6 +1,8 @@
-# Private Network Service Platform: CN Project, Phase 1
+# Private Network Service Platform: CN Project, Phase 1 + Phase 2
 
 A client types `https://app.team.test`. **Our own DNS server** resolves the name. The connection then goes over **HTTPS to our own nginx edge**, and the edge **load-balances** the request across **two backend servers**. We captured every step of that journey with dig, curl, Wireshark and the browser, on two real MacBooks on the college Wi-Fi.
+
+In **Phase 2** we made the platform survive failures. It now has a backup DNS server, a short TTL for fast record changes, a pf firewall so the backends are reachable only through the edge, backend failover, and a standby edge that takes over through a DNS cutover.
 
 > The application stays simple. The network is the project.
 
@@ -10,8 +12,10 @@ A client types `https://app.team.test`. **Our own DNS server** resolves the name
 
 | Enrollment no. | Name | Mac | Roles |
 |---|---|---|---|
-| 2401010380 | Rishi Raj | Rishi's MacBook Pro, **10.7.16.15** | DNS server (dnsmasq), edge (nginx reverse proxy, TLS, load balancer), Backend A |
-| 2401020116 | Kaustubh Ranjan Mishra | Kaustubh's MacBook Pro, **10.7.3.40** | Backend B, test client (browser, curl, dig), Wireshark capture |
+| 2401010380 | Rishi Raj | Rishi's MacBook Pro, **10.7.16.15** (Phase 2: 10.7.17.145) | DNS server (dnsmasq), edge (nginx reverse proxy, TLS, load balancer), Backend A |
+| 2401020116 | Kaustubh Ranjan Mishra | Kaustubh's MacBook Pro, **10.7.3.40** (Phase 2: 10.7.17.133) | Backend B, test client (browser, curl, dig), Wireshark capture. Phase 2 adds the **backup DNS** and the **standby edge** |
+
+The Wi-Fi uses DHCP, so on the Phase 2 day both Macs got new addresses. We just updated `SERVER_IP` / `CLIENT_IP` in `team.env` and nothing else changed.
 
 ## Topology
 
@@ -35,9 +39,18 @@ A client types `https://app.team.test`. **Our own DNS server** resolves the name
 
 The PDF names the roles "Mac 1 to Mac 4". We kept those names in `team.env` (`MAC1_IP` … `MAC4_IP`). On a 2-Mac team, Mac 1, 2 and 3 share Rishi's IP and Mac 4 is Kaustubh's. Full diagrams, the IP table and the layer-by-layer flow are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## Phase 2: extensions
+## Phase 2: extensions → where the proof is
 
-All five hands-on extensions run on the same two Macs: **A** backup DNS, **B** TTL 30 plus a record change, **C** pf firewall, **D** backend failover, **E** standby edge with DNS cutover. The write-up, results and the Extension F diagnosis checklist are in [docs/PHASE2.md](docs/PHASE2.md), with screenshots in [evidence/phase2/](evidence/phase2/).
+Full write-up: [docs/PHASE2.md](docs/PHASE2.md). Screenshots: [`evidence/phase2/`](evidence/phase2/).
+
+| Ext | What we built | How | Result | Evidence |
+|---|---|---|---|---|
+| A: Backup DNS | Second dnsmasq on Kaustubh's Mac, same zone | `TEAM_ENV=team-backup.env scripts/dns.sh start`, client DNS = `.145, .133` | Primary DNS stopped, and the name still resolves and the site still loads | `p2-A1`–`A4` |
+| B: TTL + record change | TTL 60 → 30, then `app` moved to a new IP | `DNS_TTL=30`, `scripts/dns.sh wrong-record`, client watched with `dscacheutil` | Client picked up the new IP within one TTL (19:11:16 → 19:11:21) | `p2-B1`, `B2` |
+| C: Host firewall | pf anchor `com.apple/cn-phase2` | Block :3001 on `en0`; :3002 only from the edge | Direct backend access times out, while the site through nginx still works. Rolled back with `pfctl -X <token>` | `p2-C0`–`C4` |
+| D: Backend failover | Backend A killed during a request loop | nginx `max_fails` / `fail_timeout` + `proxy_next_upstream` | Zero client errors. Log: `upstream=…:3001, …:3002 upstream_status=502, 200` | `p2-D1`–`D3` |
+| E: Standby edge | Second nginx on Kaustubh's Mac (`X-Edge: standby-nginx`) | Stop the primary edge, point DNS at the standby | `mac2-nginx` → about 7 s gap → `standby-nginx` | `p2-E1`, `E2` |
+| F: Fault diagnosis | Live in the viva | DNS → IP → TCP → TLS → app checklist | See [docs/PHASE2.md](docs/PHASE2.md#extension-f-diagnosing-a-fault-live-in-the-viva) | |
 
 ## Repository layout
 
@@ -48,8 +61,9 @@ dns/                      ← dnsmasq template + the exact config we ran (dnsmas
 edge/                     ← nginx template + the exact config we ran (nginx.conf.example)
 tls/make-certs.sh         ← local CA + server certificate (OpenSSL); tls/out/*.crt = the public certs we used
 scripts/                  ← one script per job (DNS, edge, backends, client setup, verify, capture, failures)
-docs/                     ← architecture, TLS, caching, Wireshark guide, failure demos
+docs/                     ← architecture, TLS, caching, Wireshark guide, failure demos, PHASE2.md
 evidence/                 ← everything from our real run: inventory, text output, failure runs, pcaps, 32 screenshots
+evidence/phase2/          ← Phase 2 screenshots (p2-A1 … p2-E2)
 ```
 
 ## How to run it (two Macs)
