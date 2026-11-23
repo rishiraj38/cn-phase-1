@@ -1,0 +1,83 @@
+$ curl --noproxy * -fsS http://app.team.test/ca.crt -o /Users/kaustubhranjanmishra/Downloads/cn-phase1/tls/out/ca.crt
+==> Fingerprint of the CA we got - compare with the one printed on Rishi's Mac (server):
+subject=CN=team Local Root CA, O=team
+sha256 Fingerprint=0A:09:70:67:00:F9:DC:39:AB:AB:08:21:93:66:4E:94:85:CF:59:0A:97:AF:67:37:9C:1F:AC:6C:B3:6E:7F:C0
+Does it match what Rishi's Mac (server) shows? [y/N] y
+$ sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /Users/kaustubhranjanmishra/Downloads/cn-phase1/tls/out/ca.crt
+  ok  CA trusted in the System keychain (Safari/Chrome use this). Restart the browser.
+  ok  curl now trusts the team CA too (plain curl https://app.team.test works, no -k)
+==> Test (note: no -k anywhere)
+$ curl -sS --noproxy * -o /dev/null -w HTTP %{http_code}  ssl_verify_result=%{ssl_verify_result} (0 = certificate trusted)\n https://app.team.test/api/status
+HTTP 200  ssl_verify_result=0 (0 = certificate trusted)
+kaustubhranjanmishra@Kaustubhs-MacBook-Pro cn-phase1 % for i in 1 2 3 4; do curl -s https://app.team.test/; echo; done
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>team - Backend A</title>
+<style>
+ body{font-family:-apple-system,Segoe UI,sans-serif;background:#2563eb;color:#fff;
+      display:flex;min-height:100vh;margin:0;align-items:center;justify-content:center}
+ .card{text-align:center} h1{font-size:96px;margin:0} p{opacity:.85;margin:.4em}
+ code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:4px}
+</style></head>
+<body><div class="card">
+ <p>team</p>
+ <h1>Backend A</h1>
+ <p>served by <code>app.team.test</code> on port <code>3001</code></p>
+ <p>your request came in via <code>10.7.17.133</code></p>
+ <p>refresh the page - the load balancer should alternate A / B</p>
+</div></body></html>
+
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>team - Backend B</title>
+<style>
+ body{font-family:-apple-system,Segoe UI,sans-serif;background:#16a34a;color:#fff;
+      display:flex;min-height:100vh;margin:0;align-items:center;justify-content:center}
+ .card{text-align:center} h1{font-size:96px;margin:0} p{opacity:.85;margin:.4em}
+ code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:4px}
+</style></head>
+<body><div class="card">
+ <p>team</p>
+ <h1>Backend B</h1>
+ <p>served by <code>mac1.team.test</code> on port <code>3002</code></p>
+ <p>your request came in via <code>10.7.17.133</code></p>
+ <p>refresh the page - the load balancer should alternate A / B</p>
+</div></body></html>
+
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>team - Backend A</title>
+<style>
+ body{font-family:-apple-system,Segoe UI,sans-serif;background:#2563eb;color:#fff;
+      display:flex;min-height:100vh;margin:0;align-items:center;justify-content:center}
+ .card{text-align:center} h1{font-size:96px;margin:0} p{opacity:.85;margin:.4em}
+ code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:4px}
+</style></head>
+<body><div class="card">
+ <p>team</p>
+ <h1>Backend A</h1>
+ <p>served by <code>app.team.test</code> on port <code>3001</code></p>
+ <p>your request came in via <code>10.7.17.133</code></p>
+ <p>refresh the page - the load balancer should alternate A / B</p>
+</div></body></html>
+
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>team - Backend B</title>
+<style>
+ body{font-family:-apple-system,Segoe UI,sans-serif;background:#16a34a;color:#fff;
+      display:flex;min-height:100vh;margin:0;align-items:center;justify-content:center}
+ .card{text-align:center} h1{font-size:96px;margin:0} p{opacity:.85;margin:.4em}
+ code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:4px}
+</style></head>
+<body><div class="card">
+ <p>team</p>
+ <h1>Backend B</h1>
+ <p>served by <code>mac1.team.test</code> on port <code>3002</code></p>
+ <p>your request came in via <code>10.7.17.133</code></p>
+ <p>refresh the page - the load balancer should alternate A / B</p>
+</div></body></html>

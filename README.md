@@ -35,6 +35,10 @@ A client types `https://app.team.test`. **Our own DNS server** resolves the name
 
 The PDF names the roles "Mac 1 to Mac 4". We kept those names in `team.env` (`MAC1_IP` … `MAC4_IP`). On a 2-Mac team, Mac 1, 2 and 3 share Rishi's IP and Mac 4 is Kaustubh's. Full diagrams, the IP table and the layer-by-layer flow are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+## Phase 2: extensions
+
+All five hands-on extensions run on the same two Macs: **A** backup DNS, **B** TTL 30 plus a record change, **C** pf firewall, **D** backend failover, **E** standby edge with DNS cutover. The write-up, results and the Extension F diagnosis checklist are in [docs/PHASE2.md](docs/PHASE2.md), with screenshots in [evidence/phase2/](evidence/phase2/).
+
 ## Repository layout
 
 ```
