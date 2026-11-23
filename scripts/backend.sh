@@ -16,7 +16,7 @@ case "$name" in
   *) sed -n '2,9p' "$0"; exit 1 ;;
 esac
 PIDF="$RUNTIME/backend-$name.pid"; LOG="$RUNTIME/backend-$name.log"
-SRV=(python3 "$ROOT/backend/server.py" --name "$name" --port "$port" --team "$TEAM_NAME")
+SRV=(node "$ROOT/backend/server.js" --name "$name" --port "$port" --team "$TEAM_NAME")
 running() { [ -f "$PIDF" ] && kill -0 "$(cat "$PIDF")" 2>/dev/null; }
 
 case "$cmd" in

@@ -55,8 +55,8 @@ A /19 mask means 10.7.0.0 to 10.7.31.255 is one network. So 10.7.3.40 and 10.7.1
 | Rishi's Mac (Mac 1 role) | dnsmasq | `MAC1_IP:53`, `127.0.0.1:53` | DNS over UDP (TCP for big answers) | Every client |
 | Rishi's Mac (Mac 2 role) | nginx | `*:80` | HTTP, only redirects to HTTPS and serves `/ca.crt` | Clients |
 | Rishi's Mac (Mac 2 role) | nginx | `*:443` | HTTPS (TLS 1.2/1.3, HTTP/1.1 + HTTP/2 via ALPN) | Clients |
-| Rishi's Mac (Mac 3 role) | backend A (`server.py`) | `0.0.0.0:3001` | Plain HTTP/1.1 | Only the edge |
-| Kaustubh's Mac (Mac 4 role) | backend B (`server.py`) | `0.0.0.0:3002` | Plain HTTP/1.1 | Only the edge |
+| Rishi's Mac (Mac 3 role) | backend A (`server.js`) | `0.0.0.0:3001` | Plain HTTP/1.1 | Only the edge |
+| Kaustubh's Mac (Mac 4 role) | backend B (`server.js`) | `0.0.0.0:3002` | Plain HTTP/1.1 | Only the edge |
 
 ### DNS records (dnsmasq on Rishi's Mac)
 

@@ -56,7 +56,7 @@ Full write-up: [docs/PHASE2.md](docs/PHASE2.md). Screenshots: [`evidence/phase2/
 
 ```
 team.env                  ← the ONLY config file: team id, the 2 IPs, which role runs where, ports
-backend/server.py         ← the REST backend (stdlib Python, no installs)
+backend/server.js         ← the REST backend (plain Node.js, built-in modules only, no npm install)
 dns/                      ← dnsmasq template + the exact config we ran (dnsmasq.conf.example)
 edge/                     ← nginx template + the exact config we ran (nginx.conf.example)
 tls/make-certs.sh         ← local CA + server certificate (OpenSSL); tls/out/*.crt = the public certs we used
@@ -68,7 +68,7 @@ evidence/phase2/          ← Phase 2 screenshots (p2-A1 … p2-E2)
 
 ## How to run it (two Macs)
 
-**Before you start:** both Macs on the **same Wi-Fi**, the macOS firewall off, and Homebrew installed. Then `brew install dnsmasq nginx` on the server Mac. Wireshark goes on the client.
+**Before you start:** both Macs on the **same Wi-Fi**, the macOS firewall off, and Homebrew installed. Then `brew install dnsmasq nginx` on the server Mac and `brew install node` on every Mac that runs a backend. Wireshark goes on the client.
 Put both IPs in `team.env` (`SERVER_IP`, `CLIENT_IP`). It must be identical on both Macs. Run everything from inside `cn-phase1`.
 
 ```bash
@@ -79,7 +79,7 @@ scripts/ping-matrix.sh
 # Task C - the two backends. Each runs in its own terminal and stays open.
 scripts/backend.sh run A          # server Mac, port 3001
 scripts/backend.sh run B          # client Mac, port 3002
-#   same thing without the script:  python3 backend/server.py --name A --port 3001
+#   same thing without the script:  node backend/server.js --name A --port 3001
 
 # server Mac - certificate + nginx edge (Tasks D, E), then DNS (Task B)
 scripts/edge.sh certs             # prints the CA fingerprint
@@ -116,7 +116,7 @@ All screenshots are in [`evidence/screenshots/`](evidence/screenshots/). The ind
 |---|---|---|
 | A: Private LAN | `team.env`, `scripts/inventory.sh`, `scripts/ping-matrix.sh` | `01`–`04` (both Macs: IP, /19 mask, gateway, MAC, ping matrix), `evidence/inventory/` |
 | B: Private DNS | `dns/dnsmasq.conf.example`, `scripts/dns.sh`, `scripts/client-dns.sh` | `10` (answer from our server, `aa` flag, TTL 60), `11` (client uses our DNS: `SERVER: 10.7.16.15#53`), `20` (Wireshark) |
-| C: Two backends | `backend/server.py`, `scripts/backend.sh` | `05`, `06` (A on :3001, B on :3002, requests from the edge with `X-Forwarded-For`) |
+| C: Two backends | `backend/server.js`, `scripts/backend.sh` | `05`, `06` (A on :3001, B on :3002, requests from the edge with `X-Forwarded-For`) |
 | D: Reverse proxy + LB | `edge/nginx.conf.example` (round robin + passive health check) | `08` (nginx on :80/:443, both backends reachable), `09`, `14` (A/B alternating), `15`, `16` (browser), `evidence/text/verify-*-lb.txt` |
 | E: HTTPS / TLS | `tls/make-certs.sh`, `scripts/trust-ca.sh`, [docs/TLS.md](docs/TLS.md) | `07` (cert + SAN + CA fingerprint), `12` (client trusts CA, `verify_result=0`), `13` (`curl -v`, no `-k`), `17` (browser certificate), `23`–`26` (Wireshark) |
 | F: HTTP caching | `/api/info` (Cache-Control + ETag), [docs/CACHING.md](docs/CACHING.md) | `18` (200 → 304 from both backends), `19` (DevTools 304), `evidence/text/verify-*-cache.txt` |
